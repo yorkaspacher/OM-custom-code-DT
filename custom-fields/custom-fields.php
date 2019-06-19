@@ -6,41 +6,40 @@
 add_filter( "dt_custom_fields_settings", "arrow_custom_fields", 1, 2 );
 function arrow_custom_fields( array $fields, string $post_type = ""){
     //check if we are dealing with a contact
-    if ($post_type === "groups"){
+    if ( $post_type === "groups" ) {
         //check if the language field is already set
-        if ( !isset( $fields["least-reached-category"] )){
+        if ( !isset( $fields["least-reached-category"] ) ) {
             //define the language field
             $fields["least-reached-category"] = [
-                "name" => __( "Least Reached Category", "disciple_tools_language" ),
-                "type" => "key_select",
+                "name"    => __( "Least Reached Category", "disciple_tools_language" ),
+                "type"    => "key_select",
                 "default" => [
-                    "no-wit" => __( "No Witness; No Response", "disciple_tools_language" ),
+                    "no-wit"    => __( "No Witness; No Response", "disciple_tools_language" ),
                     "wit-nocom" => __( "Witness; No Community", "disciple_tools_language" ),
-                    "com-iso" => __("Community but Isolated", "disciple_tools_language")
+                    "com-iso"   => __( "Community but Isolated", "disciple_tools_language" )
                 ]
             ];
         }
-        if ( !isset( $fields["other-partners"] )) {
-          $fields["other-partners"] = [
-            "name" => __("Other Partners", "disciple_tools_language"),
-            "type" => "text"
-          ];
+        if ( !isset( $fields["other-partners"] ) ) {
+            $fields["other-partners"] = [
+                "name" => __( "Other Partners", "disciple_tools_language" ),
+                "type" => "text"
+            ];
         }
-        if ( !isset( $fields["your-contributions"])){
-          $fields["your-contributions"] = [
-            "name" => __("Your Contributions", "disciple_tools_language"),
-            "type" => "key_select",
-            "default" => [
-              "none" => __("None", "disciple_tools_language"),
-              "20" => __("20%", "disciple_tools_language"),
-              "40" => __("40%", "disciple_tools_language"),
-              "60" => __("60%", "disciple_tools_language"),
-              "80" => __("80%", "disciple_tools_language"),
-              "100" => __("100%", "disciple_tools_language")
-            ]
-          ];
+        if ( !isset( $fields["your-contributions"] ) ) {
+            $fields["your-contributions"] = [
+                "name"    => __( "Your Contributions", "disciple_tools_language" ),
+                "type"    => "key_select",
+                "default" => [
+                    "none" => __( "None", "disciple_tools_language" ),
+                    "20"   => __( "20%", "disciple_tools_language" ),
+                    "40"   => __( "40%", "disciple_tools_language" ),
+                    "60"   => __( "60%", "disciple_tools_language" ),
+                    "80"   => __( "80%", "disciple_tools_language" ),
+                    "100"  => __( "100%", "disciple_tools_language" )
+                ]
+            ];
         }
-        
     }
     return $fields;
 }
@@ -65,7 +64,7 @@ function arrow_add_section( $section ){
         $group_id = get_the_ID();
         $group_fields = Disciple_Tools_Groups_Post_Type::instance()->get_custom_fields_settings();
         $group = Disciple_Tools_Groups::get_group( $group_id, true )
-    ?>
+        ?>
         <!-- need you own css? -->
         <style type="text/css">
             .required-style {
@@ -82,30 +81,31 @@ function arrow_add_section( $section ){
         <select class="select-field" id="least-reached-category" style="margin-bottom: 5px">
             <?php
             foreach ( $group_fields["least-reached-category"]["default"] as $key => $value ){
-                if ( $group["least-reached-category"]["key"] === $key ) {
+                if ( isset( $group["least-reached-category"]["key"] ) && $group["least-reached-category"]["key"] === $key ) {
                     ?>
-                    <option value="<?php echo esc_html( $key ) ?>" selected><?php echo esc_html( $value ); ?></option>
+                    <option value="<?php echo esc_html( $key ) ?>" selected><?php echo esc_html( $value["label"] ); ?></option>
                 <?php } else { ?>
-                    <option value="<?php echo esc_html( $key ) ?>"><?php echo esc_html( $value ); ?></option>
+                    <option value="<?php echo esc_html( $key ) ?>"><?php echo esc_html( $value["label"] ); ?></option>
                 <?php }
             }
             ?>
         </select>
         <div class="section-subheader">
-          <?php esc_html_e( 'Your Contributions', 'disciple_tools' )?> <span class="required-style">*</span>
+          <?php esc_html_e( 'Other partners', 'disciple_tools' )?> <span class="required-style">*</span>
         </div>
-        <input class="select-field" id="your-contributions" style="margin-bottom:0px;width:100%;padding:10px;" />
+        <input type="text" class="text-input" id="other-partners" style="margin-bottom:0px;width:100%;padding:10px;" />
+
         <div class="section-subheader">
             <?php esc_html_e( 'Your Contributions', 'disciple_tools' )?> <span class="required-style">*</span>
         </div>
         <select class="select-field" id="your-contributions" style="margin-bottom: 5px">
             <?php
             foreach ( $group_fields["your-contributions"]["default"] as $key => $value ){
-                if ( $group["your-contributions"]["key"] === $key ) {
+                if ( isset( $group["your-contributions"]["key"] ) && $group["your-contributions"]["key"] === $key ) {
                     ?>
-                    <option value="<?php echo esc_html( $key ) ?>" selected><?php echo esc_html( $value ); ?></option>
+                    <option value="<?php echo esc_html( $key ) ?>" selected><?php echo esc_html( $value["label"] ); ?></option>
                 <?php } else { ?>
-                    <option value="<?php echo esc_html( $key ) ?>"><?php echo esc_html( $value ); ?></option>
+                    <option value="<?php echo esc_html( $key ) ?>"><?php echo esc_html( $value["label"] ); ?></option>
                 <?php }
             }
             ?>
@@ -117,7 +117,7 @@ function arrow_add_section( $section ){
             jQuery(($)=>{
             })
         </script>
-    <?php
+        <?php
     }
 
     //add more sections here if you want...
